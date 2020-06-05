@@ -26,12 +26,11 @@ namespace WebHS.Controllers
             Usuario.Usuarios = _context.Usuario.Where(u => u.TipoUsuario.Equals(TipoUsuario.Usuario)).ToList();
             return View(Usuario);
         }
-
-        public IActionResult Criar(int idusuario) // View criação da dieta
+        public IActionResult Criar(int Id) // View criação da dieta
         {
             Dieta = new Dieta();
-            Dieta.Usuario = _context.Usuario.Where(u => u.Id == idusuario).FirstOrDefault();
-            var verificacao = _context.Dieta.Where(u => u.UsuarioId == idusuario).FirstOrDefault();
+            Dieta.Usuario = _context.Usuario.Where(u => u.Id == Id).FirstOrDefault();
+            var verificacao = _context.Dieta.Where(u => u.UsuarioId == Id).FirstOrDefault();
             if (verificacao != null)
             {
                 Dieta = verificacao;
@@ -40,5 +39,21 @@ namespace WebHS.Controllers
             return View(Dieta);
         }
 
+        public async Task<string> Delete(int alimentoid)
+        {
+            try
+            {
+                Alimento alimento = new Alimento();
+                alimento = _context.Alimento.Where(x => x.Id == alimentoid).FirstOrDefault();
+                _context.Alimento.Remove(alimento);
+                await _context.SaveChangesAsync();
+                return "Ok";
+            }
+            catch(Exception)
+            {
+                return "NOk";
+            }
+            
+        }
     }
 }

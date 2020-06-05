@@ -3,16 +3,66 @@
     ViewData["Title"] = "Criar";
 }
 
-<h1>Criar</h1>
-<h1>@Model.Usuario.Nome</h1>
-
-@{
-    if (Model.Alimentos != null)
-    {
-        foreach (var item in Model.Alimentos)
+<div>
+    <div>
+        <h4><b>Usuario:</b> @Model.Usuario.Nome</h4>
+    </div>
+    <input hidden id="idusuario" value="@Model.Usuario.Id" />
+    <center><h2>Itens da dieta</h2></center>
+    <button type="button" class="btn btn-warning" onclick="adicionar(this)">+</button>
+    @{
+        if (Model.Alimentos != null)
         {
-            <h1>@item.Nome</h1>
-            
+            <table id="tabela" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" width="50%">Alimento</th>
+                        <th scope="col" width="40%">Quantidade</th>
+                        <th width="10%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Alimentos)
+                    {
+                        <tr>
+                            <td>@item.Nome</td>
+                            <td>@item.UnidadeMedida</td>
+                            <td><button type="button" class="btn btn-warning" id="@item.Id" onclick="excluir()">X</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
     }
-}
+    <button type="button" class="btn btn-warning">Salvar</button>
+</div>
+
+<script>
+    function excluir(obj) {
+        var id = obj.id;
+        $.ajax({
+            type: 'GET',
+            url: '/Dieta/Delete?alimentoid=' + id,
+            dataType: 'text',
+            success: function (data) {
+                if (data == "Ok") {
+                    window.location.href = "@Url.Action("Criar", "Dieta")" /*+ "?Id=" + $("#idusuario").val()*/;
+                }
+            }
+        });
+    }
+
+    function adicionar() {
+        var html =
+            '<tr>' +
+                 '<td><input id="nomeAlimento" placeholder="Digite..." /></td>' +
+                 '<td><input id="unidadeMedida" placeholder="Digite..." /></td>' +
+                 '<td><button type="button" class="btn btn-warning" onclick="salvar(this)">Salvar</button></td>' +
+            '</tr>';
+        var tabela = document.getElementById("tabela");
+        var numeroLinhas = tabela.rows.length;
+        var linha = tabela.insertRow(numeroLinhas);
+        var celula = linha.insertCell(0);
+        celula.innerHTML = html;
+    }
+</script>
