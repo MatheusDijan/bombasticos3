@@ -1,0 +1,18 @@
+﻿@model WebHS.Domain.Entities.Dieta
+@{
+    ViewData["Title"] = "Criar";
+}
+
+<h1>Criar</h1>
+<h1>@Model.Usuario.Nome</h1>
+
+@{
+    if (Model.Alimentos != null)
+    {
+        foreach (var item in Model.Alimentos)
+        {
+            <h1>@item.Nome</h1>
+            
+        }
+    }
+}
