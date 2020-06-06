@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,17 @@ namespace WebHS.Controllers
         }
         public IActionResult Index() //View do nutricionista (mostra lista de users)
         {
-
             Usuario = new Usuario();
             Usuario.Usuarios = _context.Usuario.Where(u => u.TipoUsuario.Equals(TipoUsuario.Usuario)).ToList();
-            return View(Usuario);
+            foreach (var item in Usuario.Usuarios)
+            {
+                Dieta dieta = _context.Dieta.Where(x => x.UsuarioId == item.Id).FirstOrDefault();
+                if (dieta == null)
+                    dieta = new Dieta();
+                dieta.Usuario = item;
+                Dieta.Dietas.Add(dieta);
+            }
+            return View(Dieta);
         }
         public IActionResult Criar(int Id) // View criação da dieta
         {
@@ -54,6 +62,38 @@ namespace WebHS.Controllers
                 return "NOk";
             }
             
+        }
+
+        public async Task<string> Salvar(string nome, string unidade, int idusuario)
+        {
+            try
+            {
+                Dieta dieta = _context.Dieta.Where(x => x.UsuarioId == idusuario).FirstOrDefault();
+                if (dieta == null)
+                {
+                    dieta = new Dieta();
+                    dieta.UsuarioId = idusuario;
+                    dieta.Dias = 15;
+                    _context.Dieta.Add(dieta);
+                    await _context.SaveChangesAsync();
+                    dieta = _context.Dieta.Where(x => x.UsuarioId == idusuario).FirstOrDefault();
+                }
+         
+                Alimento alimento = new Alimento();
+                alimento.Nome = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(nome);
+                alimento.UnidadeMedida = unidade;
+                alimento.DietaId = dieta.Id;
+            
+                _context.Alimento.Add(alimento);
+                await _context.SaveChangesAsync();
+                
+                return "Ok";
+            }
+            catch (Exception)
+            {
+                return "NOk";
+            }
+
         }
     }
 }

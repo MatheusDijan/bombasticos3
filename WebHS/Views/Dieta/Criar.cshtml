@@ -9,16 +9,16 @@
     </div>
     <input hidden id="idusuario" value="@Model.Usuario.Id" />
     <center><h2>Itens da dieta</h2></center>
-    <button type="button" class="btn btn-warning" onclick="adicionar(this)">+</button>
+    <button type="button" id="btnadicionar" class="btn btn-warning" onclick="adicionar(this)"><i class="fas fa-plus"></i></button>
     @{
         if (Model.Alimentos != null)
         {
             <table id="tabela" class="table">
                 <thead>
                     <tr>
-                        <th scope="col" width="50%">Alimento</th>
-                        <th scope="col" width="40%">Quantidade</th>
-                        <th width="10%"></th>
+                        <th scope="col" width="65%">Alimento</th>
+                        <th scope="col" width="30%">Quantidade</th>
+                        <th width="5%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,17 +27,22 @@
                         <tr>
                             <td>@item.Nome</td>
                             <td>@item.UnidadeMedida</td>
-                            <td><button type="button" class="btn btn-warning" id="@item.Id" onclick="excluir()">X</button></td>
+                            <td><button type="button" class="btn btn-warning" id="@item.Id" onclick="excluir(this)"><i class="fas fa-times"></i></button></td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <div id="divAdd" hidden>
+                <input id="nomeAlimento" placeholder="Digite..." />
+                <input id="unidadeMedida" placeholder="Digite..." />
+                <button type="button" class="btn btn-warning" onclick="Salvar()"><i class="fas fa-check"></i></button>
+            </div>
         }
     }
-    <button type="button" class="btn btn-warning">Salvar</button>
 </div>
 
 <script>
+    var verificacao = false;
     function excluir(obj) {
         var id = obj.id;
         $.ajax({
@@ -46,23 +51,33 @@
             dataType: 'text',
             success: function (data) {
                 if (data == "Ok") {
-                    window.location.href = "@Url.Action("Criar", "Dieta")" /*+ "?Id=" + $("#idusuario").val()*/;
+                    window.location.href = "@Url.Action("Criar", "Dieta")";
                 }
             }
         });
     }
 
     function adicionar() {
-        var html =
-            '<tr>' +
-                 '<td><input id="nomeAlimento" placeholder="Digite..." /></td>' +
-                 '<td><input id="unidadeMedida" placeholder="Digite..." /></td>' +
-                 '<td><button type="button" class="btn btn-warning" onclick="salvar(this)">Salvar</button></td>' +
-            '</tr>';
-        var tabela = document.getElementById("tabela");
-        var numeroLinhas = tabela.rows.length;
-        var linha = tabela.insertRow(numeroLinhas);
-        var celula = linha.insertCell(0);
-        celula.innerHTML = html;
+        if (!verificacao) {
+            verificacao = true;
+            $("#btnadicionar").hide();
+            $("#btnAdd").css("");
+        }
+    }
+
+    function Salvar() {
+        var nome = $("#nomeAlimento").val();
+        var unidade = $("#unidadeMedida").val();
+        var usuario = $("#idusuario").val();
+        $.ajax({
+            type: 'GET',
+            url: '/Dieta/Salvar?nome=' + nome + "&unidade=" + unidade + "&idusuario=" + usuario,
+            dataType: 'text',
+            success: function (data) {
+                if (data == "Ok") {
+                    window.location.href = "@Url.Action("Criar", "Dieta")";
+                }
+            }
+        });
     }
 </script>
