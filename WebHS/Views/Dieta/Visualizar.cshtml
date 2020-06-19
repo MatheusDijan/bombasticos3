@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Visualizar";
+}
+
+<div>
+    <div class="col-md-12">
+        <div>
+            <h4><b>Usuario:</b> @Model.Usuario.Nome</h4>
+        </div>
+        <center><h2>Dieta</h2></center>
+        <br />
+    </div>
+    @{
+        if (Model.Alimentos != null)
+        {
+            <table id="tabela" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" width="65%">Alimento</th>
+                        <th scope="col" width="35%">Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Alimentos)
+                    {
+                        <tr>
+                            <td>@item.Nome</td>
+                            <td>@item.UnidadeMedida</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+</div>

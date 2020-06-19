@@ -27,7 +27,8 @@ namespace WebHS.Controllers
             foreach (var item in Usuario.Usuarios)
             {
                 Dieta dieta = _context.Dieta.Where(x => x.UsuarioId == item.Id).FirstOrDefault();
-                if (dieta == null)
+                dieta.Alimentos = _context.Alimento.Where(x => x.DietaId == dieta.Id).ToList();
+                if (dieta == null || dieta.Alimentos.Count == 0)
                     dieta = new Dieta();
                 dieta.Usuario = item;
                 Dieta.Dietas.Add(dieta);
@@ -35,6 +36,19 @@ namespace WebHS.Controllers
             return View(Dieta);
         }
         public IActionResult Criar(int Id) // View criação da dieta
+        {
+            Dieta = new Dieta();
+            Dieta.Usuario = _context.Usuario.Where(u => u.Id == Id).FirstOrDefault();
+            var verificacao = _context.Dieta.Where(u => u.UsuarioId == Id).FirstOrDefault();
+            if (verificacao != null)
+            {
+                Dieta = verificacao;
+                Dieta.Alimentos = _context.Alimento.Where(u => u.DietaId == Dieta.Id).ToList();
+            }
+            return View(Dieta);
+        }
+
+        public IActionResult Visualizar(int Id) // View visualização da dieta
         {
             Dieta = new Dieta();
             Dieta.Usuario = _context.Usuario.Where(u => u.Id == Id).FirstOrDefault();
@@ -57,13 +71,23 @@ namespace WebHS.Controllers
                 await _context.SaveChangesAsync();
                 return "Ok";
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return "NOk";
             }
-            
-        }
 
+        }
+        public List<int> Pesquisar(string palavra)
+        {
+            Usuario usuario = new Usuario();
+            if (palavra == null)
+                usuario.Usuarios = _context.Usuario.ToList();
+            else
+                usuario.Usuarios = _context.Usuario.Where(x => x.Nome.Contains(palavra)).ToList();
+
+            List<int> UsuariosIds = usuario.Usuarios.Select(x => x.Id).ToList();
+            return UsuariosIds;
+        }
         public async Task<string> Salvar(string nome, string unidade, int idusuario)
         {
             try
@@ -78,15 +102,15 @@ namespace WebHS.Controllers
                     await _context.SaveChangesAsync();
                     dieta = _context.Dieta.Where(x => x.UsuarioId == idusuario).FirstOrDefault();
                 }
-         
+
                 Alimento alimento = new Alimento();
                 alimento.Nome = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(nome);
                 alimento.UnidadeMedida = unidade;
                 alimento.DietaId = dieta.Id;
-            
+
                 _context.Alimento.Add(alimento);
                 await _context.SaveChangesAsync();
-                
+
                 return "Ok";
             }
             catch (Exception)

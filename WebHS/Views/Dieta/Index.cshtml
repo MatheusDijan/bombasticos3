@@ -3,9 +3,10 @@
     ViewData["Title"] = "Index";
 }
 
+<input id="inputPesquisa" placeholder="Pesquise..." onfocusout="pesquisar()" />
 <table id="tabela" class="table">
     <thead>
-        <tr>
+        <tr id="idTitulo">
             <th scope="col" width="90%">Usuário</th>
             <th width="5%"></th>
             <th width="5%"></th>
@@ -14,7 +15,7 @@
     <tbody>
         @foreach (var item in Model.Dietas)
         {
-            <tr>
+            <tr id="@item.Usuario.Id">
                 <td>@item.Usuario.Nome</td>
                 @{
                     if (item.Id == 0)
@@ -32,4 +33,27 @@
     </tbody>
 </table>
 
+<script>
+    function pesquisar() {
+        var string = $("#inputPesquisa").val();
+        $.ajax({
+            type: 'GET',
+            url: '/Dieta/Pesquisar?palavra=' + string,
+            dataType: 'json',
+            success: function (ids) {
 
+                var tabela = document.getElementById("tabela");
+                var linhas = tabela.getElementsByTagName('tr');
+                for (var i = 0; i < linhas.length; i++) {
+                    if (linhas[i].id != "idTitulo") {
+                        $("#" + linhas[i].id).hide();
+                    }
+                }
+                for (var i = 0; i < ids.length; i++) {
+                    console.log(ids[i]);
+                    $("#" + ids[i]).show();
+                }
+            }
+        });
+    }
+</script>
