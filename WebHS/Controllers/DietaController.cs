@@ -27,9 +27,10 @@ namespace WebHS.Controllers
             foreach (var item in Usuario.Usuarios)
             {
                 Dieta dieta = _context.Dieta.Where(x => x.UsuarioId == item.Id).FirstOrDefault();
-                dieta.Alimentos = _context.Alimento.Where(x => x.DietaId == dieta.Id).ToList();
-                if (dieta == null || dieta.Alimentos.Count == 0)
+                if (dieta == null)
                     dieta = new Dieta();
+                else
+                    dieta.Alimentos = _context.Alimento.Where(x => x.DietaId == dieta.Id).ToList();
                 dieta.Usuario = item;
                 Dieta.Dietas.Add(dieta);
             }

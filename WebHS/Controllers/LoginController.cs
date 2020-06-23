@@ -37,11 +37,12 @@ namespace WebHS.Controllers
             Usuario validacao = _context.Usuario.Where(u => u.Email.Equals(usuario.Email) && u.Senha.Equals(usuario.Senha)).FirstOrDefault();
             if (validacao != null)
             {
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
-                ModelState.AddModelError("", "Usuário ou senha inválidos");
+                if (usuario.Email != null && usuario.Senha != null)
+                    ModelState.AddModelError("", "Usuário ou senha inválidos");
                 return View("Login");
             }
 
@@ -59,10 +60,19 @@ namespace WebHS.Controllers
             usuario.TipoUsuario = TipoUsuario.Usuario;
             if (ModelState.IsValid)
             {
-
-                _context.Add(usuario);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Login));
+                Usuario validacao = _context.Usuario.Where(u => u.Email.Equals(usuario.Email) && u.Senha.Equals(usuario.Senha)).FirstOrDefault();
+                if (validacao == null)
+                {
+                    _context.Add(usuario);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Login));
+                }
+                else
+                {
+                    if (usuario.Nome != null && usuario.Senha != null && usuario.Email != null)
+                        ModelState.AddModelError("", "Usuário já cadastrado");
+                    return View();
+                }
             }
             return View(usuario);
         }
