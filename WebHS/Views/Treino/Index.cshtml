@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<input id="inputPesquisa" placeholder="Pesquise..." onfocusout="pesquisar()" />
+<table id="tabela" class="table">
+    <thead>
+        <tr id="idTitulo">
+            <th scope="col" width="90%">Usuário</th>
+            <th width="5%"></th>
+            <th width="5%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Treinos)
+        {
+            <tr id="@item.Usuario.Id">
+                <td>@item.Usuario.Nome</td>
+                @{
+                    if (item.Id == 0)
+                    {
+                        <td><i class="far fa-dot-circle fa-2x" style="margin-top: 3px; color:deeppink"></i></td>
+                    }
+                    else
+                    {
+                        <td><i class="far fa-dot-circle fa-2x" style="margin-top: 3px; color:lawngreen"></i></td>
+                    }
+                }
+                <td><a class="btn btn-warning" asp-controller="Treino" asp-action="Criar" asp-route-id="@item.Usuario.Id"><i class="fas fa-angle-double-right"></i></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function pesquisar() {
+        var string = $("#inputPesquisa").val();
+        $.ajax({
+            type: 'GET',
+            url: '/Dieta/Pesquisar?palavra=' + string,
+            dataType: 'json',
+            success: function (ids) {
+
+                var tabela = document.getElementById("tabela");
+                var linhas = tabela.getElementsByTagName('tr');
+                for (var i = 0; i < linhas.length; i++) {
+                    if (linhas[i].id != "idTitulo") {
+                        $("#" + linhas[i].id).hide();
+                    }
+                }
+                for (var i = 0; i < ids.length; i++) {
+                    console.log(ids[i]);
+                    $("#" + ids[i]).show();
+                }
+            }
+        });
+    }
+</script>
+

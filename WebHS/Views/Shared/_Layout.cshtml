@@ -26,14 +26,17 @@
                         Login
                     </a>
                 </li>*@
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Dieta" asp-action="Index">Dieta</a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <partial name="_LoginPartial" />
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-area="" asp-controller="Dieta" asp-action="Index">Dieta</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-area="" asp-controller="Treino" asp-action="Index">Treino</a>
+                    </li>
+                </ul>
+            </div>
             </div>
         </nav>
 

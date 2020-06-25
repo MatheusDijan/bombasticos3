@@ -1,0 +1,40 @@
+﻿@model WebHS.Domain.Entities.Treino
+@{
+    ViewData["Title"] = "Visualizar";
+}
+
+<div>
+    <div class="col-md-12">
+        <div>
+            <h4><b>Usuario:</b> @Model.Usuario.Nome</h4>
+        </div>
+        <input hidden id="idusuario" value="@Model.Usuario.Id" />
+        <center><h2>Dieta</h2></center>
+        <br />
+    </div>
+    @{
+        if (Model.Atividades != null)
+        {
+            <table id="tabela" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Atividade</th>
+                        <th scope="col">Quantidade Repetições</th>
+                        <th scope="col">Grupo Muscular</th>
+                        <th width="5%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Atividades)
+                    {
+                        <tr>
+                            <td>@item.Nome</td>
+                            <td>@item.Repeticoes</td>
+                            <td>@item.Tipo</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+</div>

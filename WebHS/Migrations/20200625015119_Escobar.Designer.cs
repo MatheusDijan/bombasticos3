@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebHS.Domain.Entities;
 
 namespace WebHS.Migrations
 {
     [DbContext(typeof(ProjetoContext))]
-    partial class ProjetoContextModelSnapshot : ModelSnapshot
+    [Migration("20200625015119_Escobar")]
+    partial class Escobar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

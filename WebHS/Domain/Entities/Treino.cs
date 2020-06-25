@@ -7,12 +7,15 @@ namespace WebHS.Domain.Entities
 {
     public class Treino : ClasseBasica
     {
+        public Usuario Usuario { get; set; }
         public Treino()
         {
             Atividades = new List<Atividade>();
+            Treinos = new List<Treino>();
         }
-        List<Atividade> Atividades { get; set; }
+        public List<Atividade> Atividades { get; set; }
         public int Dias { get; set; }
         public int UsuarioId { get; set; }
+        public List<Treino> Treinos { get; set; }
     }
 }

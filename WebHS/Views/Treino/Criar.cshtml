@@ -1,0 +1,93 @@
+﻿@model WebHS.Domain.Entities.Treino
+@{
+    ViewData["Title"] = "Criar";
+}
+
+<div>
+    <div class="col-md-12">
+        <div>
+            <h4><b>Usuario:</b> @Model.Usuario.Nome</h4>
+        </div>  
+        <input hidden id="idusuario" value="@Model.Usuario.Id" />
+        <center><h2>Dieta</h2></center>
+        <button type="button" id="btnadicionar" class="btn btn-warning" style="float:right; margin-top: -40px" onclick="adicionar(this)"><i class="fas fa-plus"></i></button>
+        <br />
+    </div>
+    @{
+        if (Model.Atividades != null)
+        {
+            <table id="tabela" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Atividade</th>
+                        <th scope="col">Quantidade Repetições</th>
+                        <th scope="col">Grupo Muscular</th>
+                        <th width="5%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Atividades)
+                    {
+                        <tr>
+                            <td>@item.Nome</td>
+                            <td>@item.Repeticoes</td>
+                            <td>@item.Tipo</td>
+                            <td><button type="button" class="btn btn-warning" id="@item.Id" onclick="excluir(this)"><i class="fas fa-times"></i></button></td>
+                        </tr>
+                    }
+                    <tr id="divAdd" style="display: none">
+                        <td><input id="nomeAtividade" placeholder="Digite o nome da atividade..." style="width:650px; margin-top: 5px" /></td>
+                        <td><input id="repeticoes" placeholder="Digite a quantidade de repetições..." style="width:250px; margin-top: 5px" /></td>
+                        <td><input id="tipo" placeholder="Digite o grupo muscular..." style="width:250px; margin-top: 5px" /></td>
+                        <td><button type="button" class="btn btn-warning" onclick="Salvar()"><i class="fas fa-check"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    }
+</div>
+
+<script>
+    var verificacao = false;
+
+    function excluir(obj) {
+        var id = obj.id;
+        $.ajax({
+            type: 'GET',
+            url: '/Treino/Delete?atividadeid=' + id,
+            dataType: 'text',
+            success: function (data) {
+                if (data == "Ok") {
+                    window.location.href = "@Url.Action("Criar", "Treino")";
+                }
+            }
+        });
+    }
+
+    function adicionar() {
+        if (!verificacao) {
+            verificacao = true;
+            $("#btnadicionar").hide();
+            $("#divAdd").show();
+            $("#btnAdd").css("");
+        }
+    }
+
+    function Salvar() {
+        var nome = $("#nomeAtividade").val();
+        var repeticoes = $("#repeticoes").val();
+        var tipo = $("#tipo").val();
+        var usuario = $("#idusuario").val();
+        $.ajax({
+            type: 'GET',
+            url: '/Treino/Salvar?nome=' + nome + "&repeticoes=" + repeticoes + "&tipo=" + tipo + "&idusuario=" + usuario,
+            dataType: 'text',
+            success: function (data) {
+                if (data == "Ok") {
+                    window.location.href = "@Url.Action("Criar", "Treino")";
+                }
+            }
+        });
+    }
+
+</script>

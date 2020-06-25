@@ -101,21 +101,24 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-color: rgba(52,73,94,0.75);
+        background-color: rgba(220, 53, 69,0.75);
     }
 </style>
 
 <div class="wrapper">
-    <div class="parent" onclick="">
+    <div class="parent">
+
         <div class="child bg-one">
-            <span>Dieta</span>
+            <a class="" asp-area="" asp-controller="Dieta" asp-action="Visualizar" asp-route-id="1"><span>Dieta</span></a>
             <img src="~/Imagem/alimento3.jpg" alt="Raised Image">
+
         </div>
     </div>
 
     <div class="parent right" onclick="">
         <div class="child bg-two">
-            <span>Treino</span>
+            <a class="" asp-area="" asp-controller="Treino" asp-action="Visualizar" asp-route-id="1"><span>Treino</span></a>
             <img src="~/Imagem/treino3.jpg" alt="Raised Image">
         </div>
     </div>
+</div>

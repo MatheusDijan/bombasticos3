@@ -10,5 +10,6 @@ namespace WebHS.Domain.Entities
         public string Nome { get; set; }
         public string Tipo { get; set; }
         public int Repeticoes { get; set; }
+        public int TreinoId { get; set; }
     }
 }
